@@ -1,4 +1,7 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 require_once 'includes/config_db.php';
 $schema = getSchema();
 
@@ -40,7 +43,9 @@ $tableName = formatstr($_GET['tab_name']);
                                 multiple 
                                 placeholder="<?php print_r($fieldData['name']); ?>" 
                                 <?php if ($fieldData['required'] == true) {print_r('required = true');} ?>">
-                            <?php } else {?>
+                                <!-- dasd -->
+
+                            <?php } else { ?>
                             <label><?php print_r($fieldData['name']); ?></label>
                             <<?php print_r($fieldData['element']); ?> 
                                 type="<?php print_r($fieldData['type']); ?>" 
@@ -51,7 +56,20 @@ $tableName = formatstr($_GET['tab_name']);
                                 placeholder="<?php print_r($fieldData['name']); ?>" 
                                 <?php if ($fieldData['required'] == true) {print_r('required = true');} ?>">
                             <?php }
-                        } ?>    
+                        } ?>   
+                        
+                        <?php if ($fieldData['element'] == 'select') { 
+                            $dataMass = R::findAll($fieldData['options']);?>
+
+                            <label><?php print_r($fieldData['name']); ?></label>
+                            <<?php print_r($fieldData['element']); ?>
+                            name="<?php print_r($fieldName); ?>"
+                            >
+                            <?php foreach ($dataMass as $element => $value) { ?>
+                                <option value="<?php print_r($value['title']); ?>"><?php print_r($value['title']); ?></option>
+                            <?php } ?>
+                            <<?php print_r($fieldData['element']); ?>>
+                        <?php }?>
 
                         <?php if ($fieldData['element'] == 'textarea') {?>
                             <label><?php print_r($fieldData['name']); ?></label>
@@ -65,14 +83,36 @@ $tableName = formatstr($_GET['tab_name']);
                         
                         <?php if ($fieldData['data']) { ?>
                             <div class="formData_choseBlocks" id="elements_<?php echo $fieldName; ?>__<?php print_r($tableName); ?>">
+<!--  -->
+                            <?php if (is_string($fieldData['data'])) { ?>
+                                <?php $dataMass = R::findAll($fieldData['data']);?>
+                                    <?php foreach ($dataMass as $elem => $value) { ?>
+                                        <div class="formData_choseBlocks__element" 
+                                        <?php if ($fieldData['selectOne'] == 'true'){echo 'data_selectOne=true';} else {echo 'data_selectOne=false';} ?>
+                                        <?php if ($value['number']) { ?>
+                                            data_blockUpdate="<?php echo $fieldName; ?>__<?php print_r($tableName); ?>"><?php print_r($value['title'].':'.$value['number']); ?></div>
+                                            <?php } else { ?>
+                                            data_blockUpdate="<?php echo $fieldName; ?>__<?php print_r($tableName); ?>"><?php print_r($value['title']); ?></div>
+                                        <?php } ?>
+                                    <?php } ?>
+                            
+                            <?php } else { ?>
+<!--  -->
                             <?php foreach($fieldData['data'] as $elem){ ?>
                                 <div 
                                     class="formData_choseBlocks__element" 
                                     <?php if ($fieldData['selectOne'] == 'true'){echo 'data_selectOne=true';} else {echo 'data_selectOne=false';} ?>
                                     data_blockUpdate="<?php echo $fieldName; ?>__<?php print_r($tableName); ?>"><?php print_r($elem); ?></div>
+                                <?php } ?>
                             <?php } ?>
-                            </div>
+                        </div>
                         <?php } ?>
+                        
+                        <!--  -->
+
+                        
+                        <!--  -->
+
                     <?php } ?>
 
                     <script>

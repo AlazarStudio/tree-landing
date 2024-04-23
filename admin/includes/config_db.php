@@ -2,6 +2,18 @@
 function getSchema()
 {
   return [
+    'tags' => [
+      'menuName' => 'Теги',
+      'fields' => [
+        'title' => [
+          'name' => 'Название',
+          'element' => 'input',
+          'type' => 'text',
+          'required' => true,
+        ],
+      ],
+    ],
+
     'galery' => [
       'menuName' => 'Работы',
       'fields'  => [
@@ -16,7 +28,7 @@ function getSchema()
           'name' => 'Тег',
           'element' => 'input',
           'type' => 'hidden',
-          'data' => ['Разное', 'Кухонные принадлежности', 'Лазерная гравировка и резка', 'Рамки', 'Картины Панно', 'Мебель', 'Религия', 'Сувениры - шкатулки'],
+          'data' => 'tags',
           'selectOne' => true,
           'required' => true,
         ],
@@ -29,9 +41,6 @@ function getSchema()
         ],
       ],
     ],
-
-
-
-
+    
   ];
 }

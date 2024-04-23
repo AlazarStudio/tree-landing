@@ -5,7 +5,7 @@
 
 <div class="admin_menu">
     <div class="admin_menu__logo">
-        <a href="/" target="_blank">ЦМИТ</a>
+        <a href="/" target="_blank">Административная панель</a>
     </div>
     <div class="admin_menu__items">
         <ul>
