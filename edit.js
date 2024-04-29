@@ -27,13 +27,13 @@ function stringToImageArray(imageString) {
 // --------------------------------------------------------------------------------------------------------------------
 
 getData("tags").then((response) => {
-  let filter = $(".work_filter__tags")
+  let filter = $(".work_filter__tags");
   response.forEach((tag) => {
-    console.log(tag);
+    //console.log(tag);
     filter.append(`
       <li data-tag="${tag.title}">${tag.title}</li> 
-    `)
-  })
+    `);
+  });
 });
 
 getData("galery").then((response) => {
@@ -43,9 +43,7 @@ getData("galery").then((response) => {
   function insertImages(response) {
     let block = $(".gallery").empty();
 
-    $(".main_column__1").empty();
-    $(".main_column__2").empty();
-    $(".main_column__3").empty();
+    let imgMass = [];
 
     response.forEach((element, index) => {
       const blockIndex = index % 3;
@@ -55,11 +53,11 @@ getData("galery").then((response) => {
       if (imageSrcArray.length > 1) {
         for (let i = 0; i < imageSrcArray.length; i++) {
           block.append(
-            `<div class="gallery_img" data-tag="${tag}" onclick="openModal(); currentSlide(${img_index})"><img src="admin/img/${imageSrcArray[i]}" alt=""></div>`
+            `<div class="gallery_img" data-tag="${tag}" onclick="openModal(${imgMass}); currentSlide(${img_index})"><img src="admin/img/${imageSrcArray[i]}" alt=""></div>`
           );
 
           modal.append(`
-              <div class="mySlides">
+              <div class="mySlides" data-tag="${tag}">
                   <img src="admin/img/${imageSrcArray[i]}" alt="Фото ${img_index}">
               </div>
             `);
@@ -71,8 +69,11 @@ getData("galery").then((response) => {
         );
 
         modal.append(`
-            <div class="mySlides">
+            <div class="mySlides" data-tag="${tag}">
+              <div style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <img src="admin/img/${imageSrcArray[0]}" alt="Фото ${img_index}">
+                <span style="position: absolute; color: white; background-color: #7171719c; width: 100%; bottom: 0; padding: 8px;">${element.text}</span>
+              </div>
             </div>
           `);
         img_index++;
@@ -88,20 +89,42 @@ getData("galery").then((response) => {
 
       if (selectedTag === "all" || tag === selectedTag) {
         $(this).show();
-      } else if (selectedTag === "Все" || tag === selectedTag) {
-        $(this).show();
       } else {
         $(this).hide();
       }
     });
   }
 
-  $(".work_filter ul li").click(function () {
-    $(".work_filter ul li.activeElement").removeClass("activeElement");
+  $(".work_filter__tags").on("click", "li", function () {
+    let img_index1 = 1;
+    let modal = $(".modal-content").empty();
+    let block = $(".gallery").empty();
 
+    const selectedTag = $(this).attr("data-tag");
+
+    response.forEach((element, index) => {
+      const imageSrcArray = stringToImageArray(element.img);
+
+      if (selectedTag == element.tag || selectedTag == 'all') {
+        block.append(
+          `<div class="gallery_img" data-tag="${element.tag}" onclick="openModal(); currentSlide(${img_index1})"><img src="admin/img/${imageSrcArray[0]}" alt=""></div>`
+        );
+
+        modal.append(`
+          <div class="mySlides" data-tag="${element.tag}">
+            <div style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <img src="admin/img/${imageSrcArray[0]}" alt="Фото ${img_index1}">
+              <span style="position: absolute; color: white; background-color: #7171719c; width: 100%; bottom: 0; padding: 8px;">${element.text}</span>
+            </div>
+          </div>
+        `);
+        img_index1++;
+      }
+    });
+
+    $(".work_filter__tags li.activeElement").removeClass("activeElement");
     $(this).addClass("activeElement");
 
-    const selectedTag = $(this).text().trim();
     filterImages(selectedTag);
   });
 

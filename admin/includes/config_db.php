@@ -24,6 +24,14 @@ function getSchema()
           'required' => false,
         ],
 
+        'text' => [
+          'name' => 'Описание',
+          'element' => 'input',
+          'type' => 'text',
+          'required' => false,
+        ],
+        
+
         'tag' => [
           'name' => 'Тег',
           'element' => 'input',
